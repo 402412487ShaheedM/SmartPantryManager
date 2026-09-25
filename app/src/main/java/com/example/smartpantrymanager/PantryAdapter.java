@@ -3,6 +3,7 @@ package com.example.smartpantrymanager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -12,14 +13,16 @@ import java.util.ArrayList;
 
 public class PantryAdapter extends RecyclerView.Adapter<PantryAdapter.PantryViewHolder> {
 
-    private ArrayList<PantryItem> pantryItems;
-    private OnItemClickListener listener;
-
     public interface OnItemClickListener {
-        void onItemClick(PantryItem item);
+        void onEditClick(PantryItem item);
+        void onDeleteClick(PantryItem item);
     }
 
-    public PantryAdapter(ArrayList<PantryItem> pantryItems, OnItemClickListener listener) {
+    private final ArrayList<PantryItem> pantryItems;
+    private final OnItemClickListener listener;
+
+    public PantryAdapter(ArrayList<PantryItem> pantryItems,
+                         OnItemClickListener listener) {
         this.pantryItems = pantryItems;
         this.listener = listener;
     }
@@ -27,10 +30,8 @@ public class PantryAdapter extends RecyclerView.Adapter<PantryAdapter.PantryView
     @NonNull
     @Override
     public PantryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_pantry, parent, false);
-
         return new PantryViewHolder(view);
     }
 
@@ -43,10 +44,12 @@ public class PantryAdapter extends RecyclerView.Adapter<PantryAdapter.PantryView
         holder.textQuantity.setText("Quantity: " + item.getQuantity());
         holder.textExpiry.setText("Expiry: " + item.getExpiry());
 
-        holder.itemView.setOnClickListener(v -> {
-            if (listener != null) {
-                listener.onItemClick(item);
-            }
+        holder.buttonEdit.setOnClickListener(v -> {
+            if (listener != null) listener.onEditClick(item);
+        });
+
+        holder.buttonDelete.setOnClickListener(v -> {
+            if (listener != null) listener.onDeleteClick(item);
         });
     }
 
@@ -58,6 +61,7 @@ public class PantryAdapter extends RecyclerView.Adapter<PantryAdapter.PantryView
     public static class PantryViewHolder extends RecyclerView.ViewHolder {
 
         TextView textIngredientName, textQuantity, textExpiry;
+        Button buttonEdit, buttonDelete;
 
         public PantryViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -65,6 +69,9 @@ public class PantryAdapter extends RecyclerView.Adapter<PantryAdapter.PantryView
             textIngredientName = itemView.findViewById(R.id.textIngredientName);
             textQuantity = itemView.findViewById(R.id.textQuantity);
             textExpiry = itemView.findViewById(R.id.textExpiry);
+
+            buttonEdit = itemView.findViewById(R.id.buttonEdit);
+            buttonDelete = itemView.findViewById(R.id.buttonDelete);
         }
     }
 }

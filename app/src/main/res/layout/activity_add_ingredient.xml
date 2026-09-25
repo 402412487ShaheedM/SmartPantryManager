@@ -7,41 +7,49 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="20dp">
+        android:padding="24dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Add Ingredient"
-            android:textSize="24sp"
-            android:textStyle="bold"/>
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:textColor="#222222"
+            android:layout_marginBottom="24dp"/>
 
-        <EditText
+        <AutoCompleteTextView
             android:id="@+id/editName"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Ingredient Name"/>
-            android:minHeight="48dp"
+            android:layout_height="48dp"
+            android:hint="Ingredient Name"
+            android:inputType="text"/>
 
         <EditText
             android:id="@+id/editQuantity"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Quantity"/>
-            android:minHeight="48dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="12dp"
+            android:hint="Quantity"
+            android:inputType="text"/>
 
         <EditText
             android:id="@+id/editExpiry"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Expiry Date (DD/MM/YYYY)"/>
-            android:minHeight="48dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="12dp"
+            android:hint="Expiry Date"
+            android:focusable="false"
+            android:clickable="true"/>
 
         <Button
             android:id="@+id/buttonSave"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Save Ingredient"/>
+            android:layout_height="48dp"
+            android:layout_marginTop="24dp"
+            android:text="Save Ingredient"
+            android:backgroundTint="#6C4FB3"
+            android:textColor="#FFFFFF"/>
 
     </LinearLayout>
 
