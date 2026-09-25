@@ -3,7 +3,6 @@ package com.example.smartpantrymanager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -14,15 +13,13 @@ import java.util.ArrayList;
 public class PantryAdapter extends RecyclerView.Adapter<PantryAdapter.PantryViewHolder> {
 
     private ArrayList<PantryItem> pantryItems;
-    private OnPantryItemClickListener listener;
+    private OnItemClickListener listener;
 
-    public interface OnPantryItemClickListener {
-        void onEdit(PantryItem item);
-        void onDelete(PantryItem item);
+    public interface OnItemClickListener {
+        void onItemClick(PantryItem item);
     }
 
-    public PantryAdapter(ArrayList<PantryItem> pantryItems,
-                         OnPantryItemClickListener listener) {
+    public PantryAdapter(ArrayList<PantryItem> pantryItems, OnItemClickListener listener) {
         this.pantryItems = pantryItems;
         this.listener = listener;
     }
@@ -43,28 +40,12 @@ public class PantryAdapter extends RecyclerView.Adapter<PantryAdapter.PantryView
         PantryItem item = pantryItems.get(position);
 
         holder.textIngredientName.setText(item.getName());
+        holder.textQuantity.setText("Quantity: " + item.getQuantity());
+        holder.textExpiry.setText("Expiry: " + item.getExpiry());
 
-        holder.textQuantity.setText(
-                "Quantity: " + item.getQuantity() + " " + item.getUnit()
-        );
-
-        if (item.getExpiryDate() == null || item.getExpiryDate().isEmpty()) {
-            holder.textExpiry.setText("Expiry: Not set");
-        } else {
-            holder.textExpiry.setText(
-                    "Expires: " + item.getExpiryDate()
-            );
-        }
-
-        holder.buttonEdit.setOnClickListener(v -> {
+        holder.itemView.setOnClickListener(v -> {
             if (listener != null) {
-                listener.onEdit(item);
-            }
-        });
-
-        holder.buttonDelete.setOnClickListener(v -> {
-            if (listener != null) {
-                listener.onDelete(item);
+                listener.onItemClick(item);
             }
         });
     }
@@ -74,18 +55,9 @@ public class PantryAdapter extends RecyclerView.Adapter<PantryAdapter.PantryView
         return pantryItems.size();
     }
 
-    public void updateList(ArrayList<PantryItem> newList) {
-        pantryItems = newList;
-        notifyDataSetChanged();
-    }
-
     public static class PantryViewHolder extends RecyclerView.ViewHolder {
 
-        TextView textIngredientName;
-        TextView textQuantity;
-        TextView textExpiry;
-        Button buttonEdit;
-        Button buttonDelete;
+        TextView textIngredientName, textQuantity, textExpiry;
 
         public PantryViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -93,8 +65,6 @@ public class PantryAdapter extends RecyclerView.Adapter<PantryAdapter.PantryView
             textIngredientName = itemView.findViewById(R.id.textIngredientName);
             textQuantity = itemView.findViewById(R.id.textQuantity);
             textExpiry = itemView.findViewById(R.id.textExpiry);
-            buttonEdit = itemView.findViewById(R.id.buttonEdit);
-            buttonDelete = itemView.findViewById(R.id.buttonDelete);
         }
     }
 }
