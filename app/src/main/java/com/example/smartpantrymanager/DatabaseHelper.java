@@ -1,3 +1,4 @@
+
 package com.example.smartpantrymanager;
 
 import android.content.ContentValues;
@@ -10,14 +11,10 @@ import java.util.ArrayList;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
-    private static final String DATABASE_NAME = "SmartPantry.db";
+    private static final String DATABASE_NAME = "Pantry.db";
     private static final int DATABASE_VERSION = 2;
 
-    public static final String TABLE_NAME = "pantry";
-    public static final String COLUMN_ID = "id";
-    public static final String COLUMN_NAME = "name";
-    public static final String COLUMN_QUANTITY = "quantity";
-    public static final String COLUMN_EXPIRY = "expiry";
+    private static final String TABLE_NAME = "PantryItems";
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -25,79 +22,85 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String createTable = "CREATE TABLE " + TABLE_NAME + " (" +
-                COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                COLUMN_NAME + " TEXT, " +
-                COLUMN_QUANTITY + " TEXT, " +
-                COLUMN_EXPIRY + " TEXT)";
+
+        String createTable =
+                "CREATE TABLE " + TABLE_NAME + " (" +
+                        "id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                        "name TEXT," +
+                        "quantity TEXT," +
+                        "expiry TEXT," +
+                        "category TEXT)";
+
         db.execSQL(createTable);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
         onCreate(db);
     }
 
     public void insertPantryItem(PantryItem item) {
+
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(COLUMN_NAME, item.getName());
-        values.put(COLUMN_QUANTITY, item.getQuantity());
-        values.put(COLUMN_EXPIRY, item.getExpiry());
+        values.put("name", item.getName());
+        values.put("quantity", item.getQuantity());
+        values.put("expiry", item.getExpiry());
+        values.put("category", item.getCategory());
 
         db.insert(TABLE_NAME, null, values);
         db.close();
     }
 
     public void updatePantryItem(PantryItem item) {
+
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(COLUMN_NAME, item.getName());
-        values.put(COLUMN_QUANTITY, item.getQuantity());
-        values.put(COLUMN_EXPIRY, item.getExpiry());
+        values.put("name", item.getName());
+        values.put("quantity", item.getQuantity());
+        values.put("expiry", item.getExpiry());
+        values.put("category", item.getCategory());
 
-        db.update(
-                TABLE_NAME,
-                values,
-                COLUMN_ID + "=?",
-                new String[]{String.valueOf(item.getId())}
-        );
+        db.update(TABLE_NAME, values, "id=?",
+                new String[]{String.valueOf(item.getId())});
 
         db.close();
     }
 
     public void deletePantryItem(int id) {
+
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE_NAME, COLUMN_ID + "=?", new String[]{String.valueOf(id)});
+        db.delete(TABLE_NAME, "id=?", new String[]{String.valueOf(id)});
         db.close();
     }
 
     public ArrayList<PantryItem> getAllPantryItems() {
 
         ArrayList<PantryItem> pantryList = new ArrayList<>();
+
         SQLiteDatabase db = this.getReadableDatabase();
 
-        Cursor cursor = db.query(
-                TABLE_NAME,
-                null,
-                null,
-                null,
-                null,
-                null,
-                COLUMN_NAME + " ASC"
-        );
+        Cursor cursor = db.rawQuery(
+                "SELECT * FROM " + TABLE_NAME + " ORDER BY name ASC",
+                null);
 
         if (cursor.moveToFirst()) {
-            do {
-                int id = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ID));
-                String name = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME));
-                String quantity = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_QUANTITY));
-                String expiry = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_EXPIRY));
 
-                pantryList.add(new PantryItem(id, name, quantity, expiry));
+            do {
+
+                PantryItem item = new PantryItem();
+
+                item.setId(cursor.getInt(0));
+                item.setName(cursor.getString(1));
+                item.setQuantity(cursor.getString(2));
+                item.setExpiry(cursor.getString(3));
+                item.setCategory(cursor.getString(4));
+
+                pantryList.add(item);
 
             } while (cursor.moveToNext());
         }

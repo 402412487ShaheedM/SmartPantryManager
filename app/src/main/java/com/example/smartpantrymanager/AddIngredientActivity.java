@@ -1,11 +1,12 @@
+
 package com.example.smartpantrymanager;
 
 import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -14,27 +15,22 @@ import java.util.Locale;
 
 public class AddIngredientActivity extends AppCompatActivity {
 
-    private AutoCompleteTextView editName;
-    private EditText editQuantity, editExpiry;
+    private EditText editName, editQuantity, editExpiry;
+    private Spinner spinnerCategory;
     private Button buttonSave;
 
     private DatabaseHelper databaseHelper;
 
     private int itemId = -1;
 
-    private final String[] suggestions = {
-            "Rice",
-            "Basmati Rice",
-            "Brown Rice",
-            "Bread",
-            "Milk",
-            "Sugar",
-            "Coffee",
-            "Tea",
-            "Beans",
-            "Pasta",
-            "Cooking Oil",
-            "Salt"
+    private final String[] categories = {
+            "Grains",
+            "Dairy",
+            "Beverages",
+            "Vegetables",
+            "Spices",
+            "Canned Food",
+            "Other"
     };
 
     @Override
@@ -45,17 +41,17 @@ public class AddIngredientActivity extends AppCompatActivity {
         editName = findViewById(R.id.editName);
         editQuantity = findViewById(R.id.editQuantity);
         editExpiry = findViewById(R.id.editExpiry);
+        spinnerCategory = findViewById(R.id.spinnerCategory);
         buttonSave = findViewById(R.id.buttonSave);
 
         databaseHelper = new DatabaseHelper(this);
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
                 this,
-                android.R.layout.simple_dropdown_item_1line,
-                suggestions
-        );
+                android.R.layout.simple_spinner_dropdown_item,
+                categories);
 
-        editName.setAdapter(adapter);
+        spinnerCategory.setAdapter(adapter);
 
         editExpiry.setOnClickListener(v -> showDatePicker());
 
@@ -67,24 +63,32 @@ public class AddIngredientActivity extends AppCompatActivity {
             editQuantity.setText(getIntent().getStringExtra("quantity"));
             editExpiry.setText(getIntent().getStringExtra("expiry"));
 
-            buttonSave.setText("Update Ingredient");
+            String category = getIntent().getStringExtra("category");
+
+            for (int i = 0; i < categories.length; i++) {
+
+                if (categories[i].equals(category)) {
+                    spinnerCategory.setSelection(i);
+                    break;
+                }
+            }
         }
 
         buttonSave.setOnClickListener(v -> {
 
-            String name = editName.getText().toString().trim();
-            String quantity = editQuantity.getText().toString().trim();
-            String expiry = editExpiry.getText().toString().trim();
+            PantryItem item = new PantryItem();
 
-            if (name.isEmpty() || quantity.isEmpty() || expiry.isEmpty()) {
-                return;
-            }
-
-            PantryItem item = new PantryItem(name, quantity, expiry);
+            item.setName(editName.getText().toString());
+            item.setQuantity(editQuantity.getText().toString());
+            item.setExpiry(editExpiry.getText().toString());
+            item.setCategory(spinnerCategory.getSelectedItem().toString());
 
             if (itemId == -1) {
+
                 databaseHelper.insertPantryItem(item);
+
             } else {
+
                 item.setId(itemId);
                 databaseHelper.updatePantryItem(item);
             }
@@ -106,16 +110,13 @@ public class AddIngredientActivity extends AppCompatActivity {
                             "%02d/%02d/%04d",
                             day,
                             month + 1,
-                            year
-                    );
+                            year);
 
                     editExpiry.setText(date);
-
                 },
                 calendar.get(Calendar.YEAR),
                 calendar.get(Calendar.MONTH),
-                calendar.get(Calendar.DAY_OF_MONTH)
-        );
+                calendar.get(Calendar.DAY_OF_MONTH));
 
         picker.show();
     }

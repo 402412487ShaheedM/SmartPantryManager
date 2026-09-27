@@ -1,181 +1,227 @@
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/backgroundCream"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="#F6FAF6">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Shaheed's Pantry"
-        android:textColor="@color/primaryGreen"
         android:textSize="30sp"
-        android:textStyle="bold"/>
+        android:textStyle="bold"
+        android:textColor="@color/primaryGreen"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="12dp"
         android:text="Keep track of your pantry at home"
-        android:textColor="@color/greyText"
-        android:textSize="14sp"/>
+        android:textSize="14sp"
+        android:textColor="#666666"
+        android:layout_marginBottom="12dp"/>
 
+    <!-- Statistics -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="horizontal">
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_width="0dp"
+            android:layout_height="80dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:background="@drawable/pantry_item_background"
+            android:layout_marginEnd="4dp">
 
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="90dp"
-                android:layout_weight="1"
-                android:layout_marginEnd="6dp"
-                android:background="@drawable/pantry_item_background"
-                android:gravity="center"
-                android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Items"
+                android:textSize="11sp"/>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Items"
-                    android:textColor="@color/greyText"
-                    android:textSize="13sp"/>
-
-                <TextView
-                    android:id="@+id/textTotalItems"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="0"
-                    android:textColor="@color/primaryGreen"
-                    android:textSize="26sp"
-                    android:textStyle="bold"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="90dp"
-                android:layout_weight="1"
-                android:layout_marginStart="6dp"
-                android:background="@drawable/pantry_item_background"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Low Stock"
-                    android:textColor="#F57C00"
-                    android:textSize="13sp"/>
-
-                <TextView
-                    android:id="@+id/textLowStockCount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="0"
-                    android:textColor="#F57C00"
-                    android:textSize="26sp"
-                    android:textStyle="bold"/>
-            </LinearLayout>
-
+            <TextView
+                android:id="@+id/textTotalItems"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textStyle="bold"
+                android:textSize="24sp"
+                android:textColor="@color/primaryGreen"/>
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:orientation="horizontal">
+            android:layout_width="0dp"
+            android:layout_height="80dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:background="@drawable/pantry_item_background"
+            android:layout_marginStart="4dp">
 
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="90dp"
-                android:layout_weight="1"
-                android:layout_marginEnd="6dp"
-                android:background="@drawable/pantry_item_background"
-                android:gravity="center"
-                android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Low Stock"
+                android:textSize="11sp"
+                android:textColor="#F57C00"/>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Expiring"
-                    android:textColor="#FB8C00"
-                    android:textSize="13sp"/>
-
-                <TextView
-                    android:id="@+id/textExpiringCount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="0"
-                    android:textColor="#FB8C00"
-                    android:textSize="26sp"
-                    android:textStyle="bold"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="90dp"
-                android:layout_weight="1"
-                android:layout_marginStart="6dp"
-                android:background="@drawable/pantry_item_background"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Expired"
-                    android:textColor="#D32F2F"
-                    android:textSize="13sp"/>
-
-                <TextView
-                    android:id="@+id/textExpiredCount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="0"
-                    android:textColor="#D32F2F"
-                    android:textSize="26sp"
-                    android:textStyle="bold"/>
-            </LinearLayout>
-
+            <TextView
+                android:id="@+id/textLowStockCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textStyle="bold"
+                android:textSize="24sp"
+                android:textColor="#F57C00"/>
         </LinearLayout>
 
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="12dp">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="80dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:background="@drawable/pantry_item_background"
+            android:layout_marginEnd="4dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Expiring"
+                android:textSize="11sp"
+                android:textColor="#F9A825"/>
+
+            <TextView
+                android:id="@+id/textExpiringCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textStyle="bold"
+                android:textSize="24sp"
+                android:textColor="#F9A825"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="80dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:background="@drawable/pantry_item_background"
+            android:layout_marginStart="4dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Expired"
+                android:textSize="11sp"
+                android:textColor="#D32F2F"/>
+
+            <TextView
+                android:id="@+id/textExpiredCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textStyle="bold"
+                android:textSize="24sp"
+                android:textColor="#D32F2F"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- Search -->
     <EditText
         android:id="@+id/editSearch"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:layout_marginTop="14dp"
-        android:background="@drawable/pantry_item_background"
         android:hint="Search ingredients..."
-        android:inputType="text"
+        android:background="@drawable/pantry_item_background"
         android:padding="12dp"
-        android:textColor="@color/darkText"
-        android:textColorHint="#999999"/>
+        android:inputType="text"
+        android:layout_marginBottom="10dp"/>
+
+    <!-- Filter buttons -->
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="none"
+        android:layout_marginBottom="10dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/buttonAll"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:text="All"
+                android:textAllCaps="false"
+                android:backgroundTint="@color/primaryGreen"
+                android:textColor="@android:color/white"/>
+
+            <Button
+                android:id="@+id/buttonLow"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginStart="8dp"
+                android:text="Low Stock"
+                android:textAllCaps="false"
+                android:backgroundTint="#F57C00"
+                android:textColor="@android:color/white"/>
+
+            <Button
+                android:id="@+id/buttonExpiring"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginStart="8dp"
+                android:text="Expiring"
+                android:textAllCaps="false"
+                android:backgroundTint="#F9A825"
+                android:textColor="@android:color/white"/>
+
+            <Button
+                android:id="@+id/buttonExpired"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginStart="8dp"
+                android:text="Expired"
+                android:textAllCaps="false"
+                android:backgroundTint="#D32F2F"
+                android:textColor="@android:color/white"/>
+
+        </LinearLayout>
+
+    </HorizontalScrollView>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewPantry"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="12dp"
         android:layout_weight="1"/>
 
     <Button
         android:id="@+id/buttonAdd"
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:layout_marginTop="8dp"
-        android:backgroundTint="@color/primaryGreen"
         android:text="Add Ingredient"
         android:textAllCaps="false"
+        android:textStyle="bold"
         android:textColor="@android:color/white"
-        android:textStyle="bold"/>
+        android:backgroundTint="@color/primaryGreen"
+        android:layout_marginTop="8dp"/>
 
 </LinearLayout>

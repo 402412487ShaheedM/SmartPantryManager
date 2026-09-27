@@ -1,99 +1,99 @@
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="12dp"
     android:orientation="vertical"
-    android:background="@drawable/pantry_item_background"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:layout_marginBottom="10dp"
+    android:background="@drawable/pantry_item_background">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:gravity="center_vertical">
 
         <TextView
             android:id="@+id/textIngredientName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Brown Basmati Rice"
-            android:textColor="#1B5E20"
-            android:textSize="19sp"
-            android:textStyle="bold"/>
+            android:text="Rice"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:textColor="@color/darkText"/>
 
         <TextView
             android:id="@+id/textStatus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="#E8F5E9"
-            android:paddingLeft="10dp"
-            android:paddingTop="4dp"
-            android:paddingRight="10dp"
-            android:paddingBottom="4dp"
             android:text="Fresh"
-            android:textColor="#2E7D32"
-            android:textSize="11sp"
-            android:textStyle="bold"/>
+            android:textSize="10sp"
+            android:textStyle="bold"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            android:textColor="@android:color/white"/>
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/textCategory"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Grains"
+        android:textStyle="italic"
+        android:textColor="@color/primaryGreen"
+        android:layout_marginTop="2dp"/>
 
     <TextView
         android:id="@+id/textQuantity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
         android:text="Quantity: 5 KG"
-        android:textColor="#555555"
-        android:textSize="14sp"/>
+        android:layout_marginTop="6dp"/>
 
     <TextView
         android:id="@+id/textLowStock"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:text="⚠ Low Stock"
-        android:textColor="#F57C00"
+        android:text="Low Stock"
+        android:textSize="11sp"
         android:textStyle="bold"
-        android:textSize="13sp"
-        android:visibility="gone"/>
+        android:textColor="#F57C00"
+        android:visibility="gone"
+        android:layout_marginTop="2dp"/>
 
     <TextView
         android:id="@+id/textExpiry"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
         android:text="Expiry: 31/12/2026"
-        android:textColor="#777777"
-        android:textSize="14sp"/>
+        android:layout_marginTop="2dp"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="14dp"
         android:gravity="end"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_marginTop="12dp">
 
         <Button
             android:id="@+id/buttonEdit"
-            android:layout_width="92dp"
-            android:layout_height="42dp"
-            android:backgroundTint="#43A047"
+            android:layout_width="72dp"
+            android:layout_height="38dp"
             android:text="Edit"
             android:textAllCaps="false"
             android:textColor="@android:color/white"
-            android:textStyle="bold"/>
+            android:backgroundTint="@color/primaryGreen"/>
 
         <Button
             android:id="@+id/buttonDelete"
-            android:layout_width="92dp"
-            android:layout_height="42dp"
-            android:layout_marginStart="8dp"
-            android:backgroundTint="#E53935"
+            android:layout_width="72dp"
+            android:layout_height="38dp"
             android:text="Delete"
             android:textAllCaps="false"
             android:textColor="@android:color/white"
-            android:textStyle="bold"/>
+            android:backgroundTint="#E53935"
+            android:layout_marginStart="8dp"/>
 
     </LinearLayout>
 
