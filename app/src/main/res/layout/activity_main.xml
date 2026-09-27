@@ -149,14 +149,14 @@
         android:padding="12dp"
         android:background="@drawable/pantry_item_background"/>
 
-    <!-- SORTING -->
+    <!-- Sort -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Sort by"
         android:textStyle="bold"
         android:textColor="#555555"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="10dp"
         android:layout_marginBottom="6dp"/>
 
     <Spinner
@@ -165,7 +165,7 @@
         android:layout_height="48dp"
         android:background="@drawable/pantry_item_background"/>
 
-    <!-- FILTERS -->
+    <!-- Filters -->
     <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -219,6 +219,35 @@
         </LinearLayout>
     </HorizontalScrollView>
 
+    <!-- Empty State -->
+    <LinearLayout
+        android:id="@+id/layoutEmpty"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Your pantry is empty"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="#2E7D32"/>
+
+        <TextView
+            android:id="@+id/textEmptyMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tap Add Ingredient to get started."
+            android:textSize="14sp"
+            android:textColor="#777777"
+            android:layout_marginTop="8dp"/>
+    </LinearLayout>
+
+    <!-- Pantry List -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewPantry"
         android:layout_width="match_parent"
