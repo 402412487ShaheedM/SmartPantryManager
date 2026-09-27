@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -31,8 +32,8 @@
             android:layout_width="0dp"
             android:layout_height="80dp"
             android:layout_weight="1"
-            android:orientation="vertical"
             android:gravity="center"
+            android:orientation="vertical"
             android:background="@drawable/pantry_item_background"
             android:layout_marginEnd="4dp">
 
@@ -47,8 +48,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="0"
-                android:textStyle="bold"
                 android:textSize="24sp"
+                android:textStyle="bold"
                 android:textColor="@color/primaryGreen"/>
         </LinearLayout>
 
@@ -56,8 +57,8 @@
             android:layout_width="0dp"
             android:layout_height="80dp"
             android:layout_weight="1"
-            android:orientation="vertical"
             android:gravity="center"
+            android:orientation="vertical"
             android:background="@drawable/pantry_item_background"
             android:layout_marginStart="4dp">
 
@@ -73,11 +74,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="0"
-                android:textStyle="bold"
                 android:textSize="24sp"
+                android:textStyle="bold"
                 android:textColor="#F57C00"/>
         </LinearLayout>
-
     </LinearLayout>
 
     <LinearLayout
@@ -91,8 +91,8 @@
             android:layout_width="0dp"
             android:layout_height="80dp"
             android:layout_weight="1"
-            android:orientation="vertical"
             android:gravity="center"
+            android:orientation="vertical"
             android:background="@drawable/pantry_item_background"
             android:layout_marginEnd="4dp">
 
@@ -108,8 +108,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="0"
-                android:textStyle="bold"
                 android:textSize="24sp"
+                android:textStyle="bold"
                 android:textColor="#F9A825"/>
         </LinearLayout>
 
@@ -117,8 +117,8 @@
             android:layout_width="0dp"
             android:layout_height="80dp"
             android:layout_weight="1"
-            android:orientation="vertical"
             android:gravity="center"
+            android:orientation="vertical"
             android:background="@drawable/pantry_item_background"
             android:layout_marginStart="4dp">
 
@@ -134,11 +134,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="0"
-                android:textStyle="bold"
                 android:textSize="24sp"
+                android:textStyle="bold"
                 android:textColor="#D32F2F"/>
         </LinearLayout>
-
     </LinearLayout>
 
     <!-- Search -->
@@ -147,16 +146,31 @@
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:hint="Search ingredients..."
-        android:background="@drawable/pantry_item_background"
         android:padding="12dp"
-        android:inputType="text"
-        android:layout_marginBottom="10dp"/>
+        android:background="@drawable/pantry_item_background"/>
 
-    <!-- Filter buttons -->
+    <!-- SORTING -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sort by"
+        android:textStyle="bold"
+        android:textColor="#555555"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="6dp"/>
+
+    <Spinner
+        android:id="@+id/spinnerSort"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@drawable/pantry_item_background"/>
+
+    <!-- FILTERS -->
     <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:scrollbars="none"
+        android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp">
 
         <LinearLayout
@@ -202,9 +216,7 @@
                 android:textAllCaps="false"
                 android:backgroundTint="#D32F2F"
                 android:textColor="@android:color/white"/>
-
         </LinearLayout>
-
     </HorizontalScrollView>
 
     <androidx.recyclerview.widget.RecyclerView
@@ -223,5 +235,4 @@
         android:textColor="@android:color/white"
         android:backgroundTint="@color/primaryGreen"
         android:layout_marginTop="8dp"/>
-
 </LinearLayout>
