@@ -32,10 +32,10 @@
             android:layout_width="0dp"
             android:layout_height="80dp"
             android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical"
+            android:layout_marginEnd="4dp"
             android:background="@drawable/pantry_item_background"
-            android:layout_marginEnd="4dp">
+            android:gravity="center"
+            android:orientation="vertical">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -57,10 +57,10 @@
             android:layout_width="0dp"
             android:layout_height="80dp"
             android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical"
+            android:layout_marginStart="4dp"
             android:background="@drawable/pantry_item_background"
-            android:layout_marginStart="4dp">
+            android:gravity="center"
+            android:orientation="vertical">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -91,10 +91,10 @@
             android:layout_width="0dp"
             android:layout_height="80dp"
             android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical"
+            android:layout_marginEnd="4dp"
             android:background="@drawable/pantry_item_background"
-            android:layout_marginEnd="4dp">
+            android:gravity="center"
+            android:orientation="vertical">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -117,10 +117,10 @@
             android:layout_width="0dp"
             android:layout_height="80dp"
             android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical"
+            android:layout_marginStart="4dp"
             android:background="@drawable/pantry_item_background"
-            android:layout_marginStart="4dp">
+            android:gravity="center"
+            android:orientation="vertical">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -169,9 +169,9 @@
     <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:scrollbars="none"
         android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp">
+        android:layout_marginBottom="10dp"
+        android:scrollbars="none">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -184,8 +184,8 @@
                 android:layout_height="40dp"
                 android:text="All"
                 android:textAllCaps="false"
-                android:backgroundTint="@color/primaryGreen"
-                android:textColor="@android:color/white"/>
+                android:textColor="@android:color/white"
+                android:backgroundTint="@color/primaryGreen"/>
 
             <Button
                 android:id="@+id/buttonLow"
@@ -194,8 +194,8 @@
                 android:layout_marginStart="8dp"
                 android:text="Low Stock"
                 android:textAllCaps="false"
-                android:backgroundTint="#F57C00"
-                android:textColor="@android:color/white"/>
+                android:textColor="@android:color/white"
+                android:backgroundTint="#F57C00"/>
 
             <Button
                 android:id="@+id/buttonExpiring"
@@ -204,8 +204,8 @@
                 android:layout_marginStart="8dp"
                 android:text="Expiring"
                 android:textAllCaps="false"
-                android:backgroundTint="#F9A825"
-                android:textColor="@android:color/white"/>
+                android:textColor="@android:color/white"
+                android:backgroundTint="#F9A825"/>
 
             <Button
                 android:id="@+id/buttonExpired"
@@ -214,8 +214,8 @@
                 android:layout_marginStart="8dp"
                 android:text="Expired"
                 android:textAllCaps="false"
-                android:backgroundTint="#D32F2F"
-                android:textColor="@android:color/white"/>
+                android:textColor="@android:color/white"
+                android:backgroundTint="#D32F2F"/>
         </LinearLayout>
     </HorizontalScrollView>
 
@@ -241,10 +241,10 @@
             android:id="@+id/textEmptyMessage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             android:text="Tap Add Ingredient to get started."
             android:textSize="14sp"
-            android:textColor="#777777"
-            android:layout_marginTop="8dp"/>
+            android:textColor="#777777"/>
     </LinearLayout>
 
     <!-- Pantry List -->
@@ -258,33 +258,49 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="8dp">
+        android:layout_marginTop="8dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/buttonExport"
+                android:layout_width="0dp"
+                android:layout_height="56dp"
+                android:layout_weight="1"
+                android:layout_marginEnd="4dp"
+                android:text="Export"
+                android:textAllCaps="false"
+                android:textStyle="bold"
+                android:textColor="@android:color/white"
+                android:backgroundTint="#1976D2"/>
+
+            <Button
+                android:id="@+id/buttonAdd"
+                android:layout_width="0dp"
+                android:layout_height="56dp"
+                android:layout_weight="1"
+                android:layout_marginStart="4dp"
+                android:text="Add Ingredient"
+                android:textAllCaps="false"
+                android:textStyle="bold"
+                android:textColor="@android:color/white"
+                android:backgroundTint="@color/primaryGreen"/>
+        </LinearLayout>
 
         <Button
-            android:id="@+id/buttonExport"
-            android:layout_width="0dp"
+            android:id="@+id/buttonRecipes"
+            android:layout_width="match_parent"
             android:layout_height="56dp"
-            android:layout_weight="1"
-            android:layout_marginEnd="4dp"
-            android:text="Export"
+            android:layout_marginTop="8dp"
+            android:text="Suggested Recipes"
             android:textAllCaps="false"
             android:textStyle="bold"
             android:textColor="@android:color/white"
-            android:backgroundTint="#1976D2"/>
-
-        <Button
-            android:id="@+id/buttonAdd"
-            android:layout_width="0dp"
-            android:layout_height="56dp"
-            android:layout_weight="1"
-            android:layout_marginStart="4dp"
-            android:text="Add Ingredient"
-            android:textAllCaps="false"
-            android:textStyle="bold"
-            android:textColor="@android:color/white"
-            android:backgroundTint="@color/primaryGreen"/>
-
+            android:backgroundTint="#7B1FA2"/>
     </LinearLayout>
 
 </LinearLayout>

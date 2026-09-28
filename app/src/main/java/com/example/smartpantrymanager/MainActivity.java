@@ -1,15 +1,13 @@
 package com.example.smartpantrymanager;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -29,115 +27,107 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
-public class MainActivity extends AppCompatActivity implements PantryAdapter.OnItemClickListener {
+public class MainActivity extends AppCompatActivity
+        implements PantryAdapter.OnItemClickListener {
 
-    private RecyclerView recyclerView;
-    private PantryAdapter adapter;
+    private RecyclerView recyclerViewPantry;
+    private PantryAdapter pantryAdapter;
     private DatabaseHelper databaseHelper;
 
-    private ArrayList<PantryItem> pantryList = new ArrayList<>();
-    private ArrayList<PantryItem> filteredList = new ArrayList<>();
+    private ArrayList<PantryItem> pantryItems = new ArrayList<>();
+
+    private Button buttonAdd, buttonExport, buttonRecipes;
+    private Button buttonAll, buttonLow, buttonExpiring, buttonExpired;
 
     private EditText editSearch;
     private Spinner spinnerSort;
+    private LinearLayout layoutEmpty;
 
-    private Button btnAll, btnLow, btnExpiring, btnExpired, btnAdd, btnExport;
-
-    private TextView txtTotalItems, txtLowStock, txtExpiring, txtExpired;
-
-    private String currentFilter = "ALL";
+    private TextView textTotalItems, textLowStockCount;
+    private TextView textExpiringCount, textExpiredCount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        recyclerViewPantry = findViewById(R.id.recyclerViewPantry);
+        recyclerViewPantry.setLayoutManager(new LinearLayoutManager(this));
+
         databaseHelper = new DatabaseHelper(this);
 
-        recyclerView = findViewById(R.id.recyclerViewPantry);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        buttonAdd = findViewById(R.id.buttonAdd);
+        buttonExport = findViewById(R.id.buttonExport);
+        buttonRecipes = findViewById(R.id.buttonRecipes);
+
+        buttonAll = findViewById(R.id.buttonAll);
+        buttonLow = findViewById(R.id.buttonLow);
+        buttonExpiring = findViewById(R.id.buttonExpiring);
+        buttonExpired = findViewById(R.id.buttonExpired);
 
         editSearch = findViewById(R.id.editSearch);
         spinnerSort = findViewById(R.id.spinnerSort);
 
-        btnAll = findViewById(R.id.buttonAll);
-        btnLow = findViewById(R.id.buttonLow);
-        btnExpiring = findViewById(R.id.buttonExpiring);
-        btnExpired = findViewById(R.id.buttonExpired);
-        btnAdd = findViewById(R.id.buttonAdd);
-        btnExport = findViewById(R.id.buttonExport);
+        layoutEmpty = findViewById(R.id.layoutEmpty);
 
-        txtTotalItems = findViewById(R.id.textTotalItems);
-        txtLowStock = findViewById(R.id.textLowStockCount);
-        txtExpiring = findViewById(R.id.textExpiringCount);
-        txtExpired = findViewById(R.id.textExpiredCount);
+        textTotalItems = findViewById(R.id.textTotalItems);
+        textLowStockCount = findViewById(R.id.textLowStockCount);
+        textExpiringCount = findViewById(R.id.textExpiringCount);
+        textExpiredCount = findViewById(R.id.textExpiredCount);
 
-        adapter = new PantryAdapter(filteredList, this);
-        recyclerView.setAdapter(adapter);
+        String[] sortOptions = {
+                "Name (A-Z)",
+                "Expiry Date",
+                "Category"
+        };
 
-        ArrayAdapter<String> sortAdapter = new ArrayAdapter<>(
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
                 this,
                 android.R.layout.simple_spinner_dropdown_item,
-                new String[]{
-                        "Name (A-Z)",
-                        "Expiry Date",
-                        "Category"
+                sortOptions
+        );
+
+        spinnerSort.setAdapter(adapter);
+
+        spinnerSort.setOnItemSelectedListener(
+                new android.widget.AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(android.widget.AdapterView<?> parent,
+                                               android.view.View view,
+                                               int position,
+                                               long id) {
+                        sortItems(position);
+                    }
+
+                    @Override
+                    public void onNothingSelected(android.widget.AdapterView<?> parent) {
+                    }
                 });
 
-        spinnerSort.setAdapter(sortAdapter);
-
-        loadPantryItems();
-        showLowStockReminder();
-
-        btnAdd.setOnClickListener(v ->
+        buttonAdd.setOnClickListener(v ->
                 startActivity(new Intent(this, AddIngredientActivity.class)));
 
-        btnExport.setOnClickListener(v -> exportCSV());
+        buttonExport.setOnClickListener(v -> exportCSV());
 
-        btnAll.setOnClickListener(v -> {
-            currentFilter = "ALL";
-            applyFilters();
-        });
+        buttonRecipes.setOnClickListener(v ->
+                startActivity(new Intent(this, RecipeActivity.class)));
 
-        btnLow.setOnClickListener(v -> {
-            currentFilter = "LOW";
-            applyFilters();
-        });
-
-        btnExpiring.setOnClickListener(v -> {
-            currentFilter = "EXPIRING";
-            applyFilters();
-        });
-
-        btnExpired.setOnClickListener(v -> {
-            currentFilter = "EXPIRED";
-            applyFilters();
-        });
-
-        spinnerSort.setOnItemSelectedListener(new android.widget.AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(android.widget.AdapterView<?> parent, View view, int position, long id) {
-                applyFilters();
-            }
-
-            @Override
-            public void onNothingSelected(android.widget.AdapterView<?> parent) {
-            }
-        });
+        buttonAll.setOnClickListener(v -> showAllItems());
+        buttonLow.setOnClickListener(v -> filterLowStock());
+        buttonExpiring.setOnClickListener(v -> filterExpiring());
+        buttonExpired.setOnClickListener(v -> filterExpired());
 
         editSearch.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                applyFilters();
+                filterSearch(s.toString());
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
-            }
+            public void afterTextChanged(Editable s) { }
         });
     }
 
@@ -148,156 +138,196 @@ public class MainActivity extends AppCompatActivity implements PantryAdapter.OnI
     }
 
     private void loadPantryItems() {
-        pantryList = databaseHelper.getAllPantryItems();
+        pantryItems = databaseHelper.getAllPantryItems();
+
+        pantryAdapter = new PantryAdapter(pantryItems, this);
+        recyclerViewPantry.setAdapter(pantryAdapter);
+
         updateStatistics();
-        applyFilters();
+        checkEmptyState();
+        checkLowStockReminder();
     }
 
-    private void applyFilters() {
+    private void checkEmptyState() {
+        if (pantryItems.isEmpty()) {
+            layoutEmpty.setVisibility(android.view.View.VISIBLE);
+            recyclerViewPantry.setVisibility(android.view.View.GONE);
+        } else {
+            layoutEmpty.setVisibility(android.view.View.GONE);
+            recyclerViewPantry.setVisibility(android.view.View.VISIBLE);
+        }
+    }
 
-        filteredList.clear();
+    private void showAllItems() {
+        pantryAdapter = new PantryAdapter(pantryItems, this);
+        recyclerViewPantry.setAdapter(pantryAdapter);
+    }
 
-        String search = editSearch.getText().toString().toLowerCase().trim();
+    private void filterSearch(String text) {
 
-        for (PantryItem item : pantryList) {
+        ArrayList<PantryItem> filtered = new ArrayList<>();
 
-            boolean matchesSearch =
-                    item.getName().toLowerCase().contains(search) ||
-                            item.getCategory().toLowerCase().contains(search);
+        for (PantryItem item : pantryItems) {
+            if (item.getName().toLowerCase().contains(text.toLowerCase())
+                    || item.getCategory().toLowerCase().contains(text.toLowerCase())) {
+                filtered.add(item);
+            }
+        }
 
-            if (!matchesSearch)
-                continue;
+        pantryAdapter = new PantryAdapter(filtered, this);
+        recyclerViewPantry.setAdapter(pantryAdapter);
+    }
 
-            boolean include;
+    private void filterLowStock() {
 
-            switch (currentFilter) {
+        ArrayList<PantryItem> filtered = new ArrayList<>();
 
-                case "LOW":
-                    include = extractQuantity(item.getQuantity()) <= 5;
-                    break;
+        for (PantryItem item : pantryItems) {
+            if (extractQuantity(item.getQuantity()) <= 5) {
+                filtered.add(item);
+            }
+        }
 
-                case "EXPIRING":
-                    include = getDaysRemaining(item.getExpiry()) >= 0 &&
-                            getDaysRemaining(item.getExpiry()) <= 7;
-                    break;
+        pantryAdapter = new PantryAdapter(filtered, this);
+        recyclerViewPantry.setAdapter(pantryAdapter);
+    }
 
-                case "EXPIRED":
-                    include = getDaysRemaining(item.getExpiry()) < 0;
-                    break;
+    private void filterExpiring() {
 
-                default:
-                    include = true;
+        ArrayList<PantryItem> filtered = new ArrayList<>();
+
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+            Date today = new Date();
+
+            for (PantryItem item : pantryItems) {
+                Date expiry = sdf.parse(item.getExpiry());
+
+                long days = TimeUnit.MILLISECONDS.toDays(
+                        expiry.getTime() - today.getTime());
+
+                if (days >= 0 && days <= 7) {
+                    filtered.add(item);
+                }
             }
 
-            if (include)
-                filteredList.add(item);
-        }
+        } catch (Exception ignored) { }
 
-        sortItems();
-
-        adapter.notifyDataSetChanged();
-
-        if (filteredList.isEmpty()) {
-            recyclerView.setVisibility(View.GONE);
-            findViewById(R.id.layoutEmpty).setVisibility(View.VISIBLE);
-        } else {
-            recyclerView.setVisibility(View.VISIBLE);
-            findViewById(R.id.layoutEmpty).setVisibility(View.GONE);
-        }
+        pantryAdapter = new PantryAdapter(filtered, this);
+        recyclerViewPantry.setAdapter(pantryAdapter);
     }
 
-    private void sortItems() {
+    private void filterExpired() {
 
-        String selected = spinnerSort.getSelectedItem().toString();
+        ArrayList<PantryItem> filtered = new ArrayList<>();
 
-        switch (selected) {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+            Date today = new Date();
 
-            case "Expiry Date":
-                Collections.sort(filteredList,
-                        Comparator.comparing(PantryItem::getExpiry));
+            for (PantryItem item : pantryItems) {
+                Date expiry = sdf.parse(item.getExpiry());
+
+                if (expiry.before(today)) {
+                    filtered.add(item);
+                }
+            }
+
+        } catch (Exception ignored) { }
+
+        pantryAdapter = new PantryAdapter(filtered, this);
+        recyclerViewPantry.setAdapter(pantryAdapter);
+    }
+
+    private void sortItems(int option) {
+
+        switch (option) {
+
+            case 0:
+                Collections.sort(pantryItems,
+                        Comparator.comparing(PantryItem::getName));
                 break;
 
-            case "Category":
-                Collections.sort(filteredList,
+            case 1:
+                try {
+                    SimpleDateFormat sdf = new SimpleDateFormat(
+                            "dd/MM/yyyy",
+                            Locale.getDefault());
+
+                    Collections.sort(pantryItems,
+                            (a, b) -> {
+                                try {
+                                    return sdf.parse(a.getExpiry())
+                                            .compareTo(sdf.parse(b.getExpiry()));
+                                } catch (Exception e) {
+                                    return 0;
+                                }
+                            });
+
+                } catch (Exception ignored) { }
+
+                break;
+
+            case 2:
+                Collections.sort(pantryItems,
                         Comparator.comparing(PantryItem::getCategory));
                 break;
-
-            default:
-                Collections.sort(filteredList,
-                        Comparator.comparing(PantryItem::getName));
         }
+
+        showAllItems();
     }
 
     private void updateStatistics() {
 
-        int total = pantryList.size();
+        int total = pantryItems.size();
         int low = 0;
         int expiring = 0;
         int expired = 0;
 
-        for (PantryItem item : pantryList) {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+            Date today = new Date();
 
-            if (extractQuantity(item.getQuantity()) <= 5)
-                low++;
+            for (PantryItem item : pantryItems) {
 
-            long days = getDaysRemaining(item.getExpiry());
+                int qty = extractQuantity(item.getQuantity());
 
-            if (days < 0)
-                expired++;
-            else if (days <= 7)
-                expiring++;
-        }
+                if (qty <= 5) low++;
 
-        txtTotalItems.setText(String.valueOf(total));
-        txtLowStock.setText(String.valueOf(low));
-        txtExpiring.setText(String.valueOf(expiring));
-        txtExpired.setText(String.valueOf(expired));
+                Date expiry = sdf.parse(item.getExpiry());
+
+                long days = TimeUnit.MILLISECONDS.toDays(
+                        expiry.getTime() - today.getTime());
+
+                if (days < 0) expired++;
+                else if (days <= 7) expiring++;
+            }
+
+        } catch (Exception ignored) { }
+
+        textTotalItems.setText(String.valueOf(total));
+        textLowStockCount.setText(String.valueOf(low));
+        textExpiringCount.setText(String.valueOf(expiring));
+        textExpiredCount.setText(String.valueOf(expired));
     }
 
-    private void showLowStockReminder() {
+    private void checkLowStockReminder() {
 
         int low = 0;
 
-        for (PantryItem item : pantryList) {
-            if (extractQuantity(item.getQuantity()) <= 5)
+        for (PantryItem item : pantryItems) {
+            if (extractQuantity(item.getQuantity()) <= 5) {
                 low++;
+            }
         }
 
-        if (low == 0)
-            return;
-
-        new AlertDialog.Builder(this)
-                .setTitle("Restock Reminder")
-                .setMessage("You have " + low + " low stock items.\n\nConsider restocking your pantry.")
-                .setPositiveButton("OK", null)
-                .show();
-    }
-
-    private int extractQuantity(String quantity) {
-
-        String number = quantity.replaceAll("[^0-9]", "");
-
-        if (number.isEmpty())
-            return 0;
-
-        return Integer.parseInt(number);
-    }
-
-    private long getDaysRemaining(String expiry) {
-
-        try {
-
-            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-
-            Date expiryDate = sdf.parse(expiry);
-
-            long diff = expiryDate.getTime() - System.currentTimeMillis();
-
-            return TimeUnit.MILLISECONDS.toDays(diff);
-
-        } catch (Exception e) {
-
-            return 999;
+        if (low > 0) {
+            new AlertDialog.Builder(this)
+                    .setTitle("Restock Reminder")
+                    .setMessage("You have " + low +
+                            " low stock items.\n\nConsider restocking your pantry.")
+                    .setPositiveButton("OK", null)
+                    .show();
         }
     }
 
@@ -305,19 +335,14 @@ public class MainActivity extends AppCompatActivity implements PantryAdapter.OnI
 
         try {
 
-            File folder = getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS);
-
-            if (folder != null && !folder.exists())
-                folder.mkdirs();
-
-            File file = new File(folder, "Pantry_Report.csv");
+            File file = new File(getExternalFilesDir("Documents"),
+                    "Pantry_Report.csv");
 
             FileWriter writer = new FileWriter(file);
 
             writer.append("Name,Category,Quantity,Expiry\n");
 
-            for (PantryItem item : pantryList) {
-
+            for (PantryItem item : pantryItems) {
                 writer.append(item.getName()).append(",");
                 writer.append(item.getCategory()).append(",");
                 writer.append(item.getQuantity()).append(",");
@@ -327,27 +352,36 @@ public class MainActivity extends AppCompatActivity implements PantryAdapter.OnI
             writer.flush();
             writer.close();
 
-            Uri uri = FileProvider.getUriForFile(
-                    this,
-                    getPackageName() + ".provider",
-                    file
-            );
-
             Intent share = new Intent(Intent.ACTION_SEND);
             share.setType("text/csv");
-            share.putExtra(Intent.EXTRA_STREAM, uri);
+
+            share.putExtra(
+                    Intent.EXTRA_STREAM,
+                    FileProvider.getUriForFile(
+                            this,
+                            getPackageName() + ".provider",
+                            file
+                    )
+            );
+
             share.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
-            startActivity(Intent.createChooser(share, "Export Pantry Report"));
+            startActivity(Intent.createChooser(share, "Share Pantry Report"));
 
         } catch (Exception e) {
-
-            new AlertDialog.Builder(this)
-                    .setTitle("Export Failed")
-                    .setMessage(e.getMessage())
-                    .setPositiveButton("OK", null)
-                    .show();
+            e.printStackTrace();
         }
+    }
+
+    private int extractQuantity(String quantity) {
+
+        String number = quantity.replaceAll("[^0-9]", "");
+
+        if (number.isEmpty()) {
+            return 0;
+        }
+
+        return Integer.parseInt(number);
     }
 
     @Override
@@ -369,7 +403,8 @@ public class MainActivity extends AppCompatActivity implements PantryAdapter.OnI
 
         new AlertDialog.Builder(this)
                 .setTitle("Delete Ingredient")
-                .setMessage("Are you sure you want to delete \"" + item.getName() + "\"?")
+                .setMessage("Are you sure you want to delete \"" +
+                        item.getName() + "\"?")
                 .setPositiveButton("Delete", (dialog, which) -> {
                     databaseHelper.deletePantryItem(item.getId());
                     loadPantryItems();
