@@ -1,4 +1,3 @@
-
 package com.example.smartpantrymanager;
 
 import android.graphics.Color;
@@ -35,10 +34,8 @@ public class PantryAdapter extends RecyclerView.Adapter<PantryAdapter.PantryView
     @NonNull
     @Override
     public PantryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_pantry, parent, false);
-
         return new PantryViewHolder(view);
     }
 
@@ -47,20 +44,29 @@ public class PantryAdapter extends RecyclerView.Adapter<PantryAdapter.PantryView
 
         PantryItem item = pantryList.get(position);
 
-        holder.textIngredientName.setText(item.getName());
+        holder.textName.setText(item.getName());
         holder.textCategory.setText(item.getCategory());
         holder.textQuantity.setText("Quantity: " + item.getQuantity());
         holder.textExpiry.setText("Expiry: " + item.getExpiry());
 
-        int qty = extractQuantity(item.getQuantity());
+        long days = getDaysRemaining(item.getExpiry());
 
-        if (qty <= 5) {
+        if (days < 0) {
+            holder.textStatus.setText("Expired");
+            holder.textStatus.setTextColor(Color.parseColor("#D32F2F"));
+        } else if (days <= 7) {
+            holder.textStatus.setText("Expiring");
+            holder.textStatus.setTextColor(Color.parseColor("#F9A825"));
+        } else {
+            holder.textStatus.setText("Fresh");
+            holder.textStatus.setTextColor(Color.parseColor("#2E7D32"));
+        }
+
+        if (extractQuantity(item.getQuantity()) <= 5) {
             holder.textLowStock.setVisibility(View.VISIBLE);
         } else {
             holder.textLowStock.setVisibility(View.GONE);
         }
-
-        setStatus(holder, item.getExpiry());
 
         holder.buttonEdit.setOnClickListener(v -> listener.onEditClick(item));
         holder.buttonDelete.setOnClickListener(v -> listener.onDeleteClick(item));
@@ -72,68 +78,30 @@ public class PantryAdapter extends RecyclerView.Adapter<PantryAdapter.PantryView
     }
 
     private int extractQuantity(String quantity) {
-
         String number = quantity.replaceAll("[^0-9]", "");
-
         if (number.isEmpty()) return 0;
-
         return Integer.parseInt(number);
     }
 
-    private void setStatus(PantryViewHolder holder, String expiryDate) {
-
+    private long getDaysRemaining(String expiry) {
         try {
-
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-
-            Date today = new Date();
-            Date expiry = sdf.parse(expiryDate);
-
-            long days = TimeUnit.MILLISECONDS.toDays(expiry.getTime() - today.getTime());
-
-            if (days < 0) {
-
-                holder.textStatus.setText("Expired");
-                holder.textStatus.setBackgroundColor(Color.parseColor("#FDECEC"));
-                holder.textStatus.setTextColor(Color.parseColor("#C62828"));
-
-            } else if (days <= 7) {
-
-                holder.textStatus.setText("Expiring");
-                holder.textStatus.setBackgroundColor(Color.parseColor("#FFF4E5"));
-                holder.textStatus.setTextColor(Color.parseColor("#EF6C00"));
-
-            } else {
-
-                holder.textStatus.setText("Fresh");
-                holder.textStatus.setBackgroundColor(Color.parseColor("#E8F5E9"));
-                holder.textStatus.setTextColor(Color.parseColor("#2E7D32"));
-            }
-
+            Date expiryDate = sdf.parse(expiry);
+            return TimeUnit.MILLISECONDS.toDays(expiryDate.getTime() - System.currentTimeMillis());
         } catch (Exception e) {
-
-            holder.textStatus.setText("Unknown");
-            holder.textStatus.setBackgroundColor(Color.LTGRAY);
-            holder.textStatus.setTextColor(Color.DKGRAY);
+            return 999;
         }
     }
 
     static class PantryViewHolder extends RecyclerView.ViewHolder {
 
-        TextView textIngredientName;
-        TextView textCategory;
-        TextView textQuantity;
-        TextView textExpiry;
-        TextView textStatus;
-        TextView textLowStock;
+        TextView textName, textCategory, textQuantity, textExpiry, textStatus, textLowStock;
+        Button buttonEdit, buttonDelete;
 
-        Button buttonEdit;
-        Button buttonDelete;
-
-        public PantryViewHolder(@NonNull View itemView) {
+        PantryViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            textIngredientName = itemView.findViewById(R.id.textIngredientName);
+            textName = itemView.findViewById(R.id.textIngredientName);
             textCategory = itemView.findViewById(R.id.textCategory);
             textQuantity = itemView.findViewById(R.id.textQuantity);
             textExpiry = itemView.findViewById(R.id.textExpiry);
