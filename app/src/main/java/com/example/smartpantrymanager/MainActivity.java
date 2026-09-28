@@ -33,7 +33,9 @@ public class MainActivity extends AppCompatActivity implements PantryAdapter.OnI
     private ArrayList<PantryItem> pantryItems = new ArrayList<>();
     private ArrayList<PantryItem> filteredItems = new ArrayList<>();
 
-    private Button buttonAdd, buttonAll, buttonLow, buttonExpiring, buttonExpired;
+    private Button buttonAdd, buttonExport;
+    private Button buttonAll, buttonLow, buttonExpiring, buttonExpired;
+
     private EditText editSearch;
     private Spinner spinnerSort;
 
@@ -52,6 +54,8 @@ public class MainActivity extends AppCompatActivity implements PantryAdapter.OnI
         databaseHelper = new DatabaseHelper(this);
 
         buttonAdd = findViewById(R.id.buttonAdd);
+        buttonExport = findViewById(R.id.buttonExport);
+
         buttonAll = findViewById(R.id.buttonAll);
         buttonLow = findViewById(R.id.buttonLow);
         buttonExpiring = findViewById(R.id.buttonExpiring);
@@ -74,6 +78,8 @@ public class MainActivity extends AppCompatActivity implements PantryAdapter.OnI
 
         buttonAdd.setOnClickListener(v ->
                 startActivity(new Intent(this, AddIngredientActivity.class)));
+
+        buttonExport.setOnClickListener(v -> exportPantryList());
 
         buttonAll.setOnClickListener(v -> {
             currentFilter = "ALL";
@@ -150,6 +156,7 @@ public class MainActivity extends AppCompatActivity implements PantryAdapter.OnI
             boolean include = true;
 
             switch (currentFilter) {
+
                 case "LOW":
                     include = extractQuantity(item.getQuantity()) <= 5;
                     break;
@@ -236,6 +243,31 @@ public class MainActivity extends AppCompatActivity implements PantryAdapter.OnI
                 .setMessage("You have " + low + " low stock items.\n\nConsider restocking your pantry.")
                 .setPositiveButton("OK", null)
                 .show();
+    }
+
+    private void exportPantryList() {
+
+        StringBuilder report = new StringBuilder();
+
+        report.append("SHAHEED'S PANTRY REPORT\n");
+        report.append("========================\n\n");
+
+        report.append("Total Items: ").append(pantryItems.size()).append("\n\n");
+
+        for (PantryItem item : pantryItems) {
+
+            report.append(item.getName()).append("\n");
+            report.append("Category: ").append(item.getCategory()).append("\n");
+            report.append("Quantity: ").append(item.getQuantity()).append("\n");
+            report.append("Expiry: ").append(item.getExpiry()).append("\n\n");
+        }
+
+        Intent share = new Intent(Intent.ACTION_SEND);
+        share.setType("text/plain");
+        share.putExtra(Intent.EXTRA_SUBJECT, "Pantry Report");
+        share.putExtra(Intent.EXTRA_TEXT, report.toString());
+
+        startActivity(Intent.createChooser(share, "Share Pantry Report"));
     }
 
     private long getDaysRemaining(String expiry) {
