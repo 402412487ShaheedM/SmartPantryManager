@@ -1,5 +1,6 @@
 package com.example.smartpantrymanager;
 
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.SimpleDateFormat;
@@ -53,13 +55,27 @@ public class PantryAdapter extends RecyclerView.Adapter<PantryAdapter.PantryView
 
         if (days < 0) {
             holder.textStatus.setText("Expired");
-            holder.textStatus.setTextColor(Color.parseColor("#D32F2F"));
+            holder.textStatus.setTextColor(Color.WHITE);
+            ViewCompat.setBackgroundTintList(
+                    holder.textStatus,
+                    ColorStateList.valueOf(Color.parseColor("#D32F2F"))
+            );
+
         } else if (days <= 7) {
             holder.textStatus.setText("Expiring");
-            holder.textStatus.setTextColor(Color.parseColor("#F9A825"));
+            holder.textStatus.setTextColor(Color.WHITE);
+            ViewCompat.setBackgroundTintList(
+                    holder.textStatus,
+                    ColorStateList.valueOf(Color.parseColor("#F9A825"))
+            );
+
         } else {
             holder.textStatus.setText("Fresh");
-            holder.textStatus.setTextColor(Color.parseColor("#2E7D32"));
+            holder.textStatus.setTextColor(Color.WHITE);
+            ViewCompat.setBackgroundTintList(
+                    holder.textStatus,
+                    ColorStateList.valueOf(Color.parseColor("#2E7D32"))
+            );
         }
 
         if (extractQuantity(item.getQuantity()) <= 5) {
@@ -87,7 +103,9 @@ public class PantryAdapter extends RecyclerView.Adapter<PantryAdapter.PantryView
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
             Date expiryDate = sdf.parse(expiry);
-            return TimeUnit.MILLISECONDS.toDays(expiryDate.getTime() - System.currentTimeMillis());
+            return TimeUnit.MILLISECONDS.toDays(
+                    expiryDate.getTime() - System.currentTimeMillis()
+            );
         } catch (Exception e) {
             return 999;
         }
@@ -95,7 +113,9 @@ public class PantryAdapter extends RecyclerView.Adapter<PantryAdapter.PantryView
 
     static class PantryViewHolder extends RecyclerView.ViewHolder {
 
-        TextView textName, textCategory, textQuantity, textExpiry, textStatus, textLowStock;
+        TextView textName, textCategory, textQuantity,
+                textExpiry, textStatus, textLowStock;
+
         Button buttonEdit, buttonDelete;
 
         PantryViewHolder(@NonNull View itemView) {
